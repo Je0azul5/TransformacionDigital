@@ -1,0 +1,136 @@
+Fase 1: 
+Promt 1:
+I am creating a Data Privacy Vault so that PII (Personally identifiable information) becomes anonymized using node.js. 
+
+I need to start with the first step: have an endpoint so that it receivesa single string with a message that contains PII like names, emails and phone numbers and returns it anonymized replacing the whole name, email and phone with an alphanumeric token.
+
+Please act as an experienced node.js developer and tell me step by step how would you do it. Ask me for information whenever you need it and use good coding practices and comments in the functions.
+
+An example of the request can be:
+curl -X POST http://localhost:3001/anonymize -H "Content-Type: application/json" -d '{"message":"oferta de trabajo para Dago Borda con email dborda@gmail.com y teléfono 3152319157"}'
+
+The response to that request would be:
+{
+    "anonymizedMessage": "oferta de trabajo para d7e8e0bf bd673df2 con email b09bde30 y teléfono dd195b6c"
+}
+Promt 2:
+
+now give me the curl to excecute
+
+Promt 3:
+Thanks. Now, let's implement the deanonymize endpoint where the calling should be like this:
+
+curl -X POST http://localhost:3001/deanonymize -H "Content-Type: application/json" -d '{"anonymizedMessage":"oferta de trabajo para NAME_e1be92e2b3a5 con email EMAIL_8004719c6ea5 y telefono PHONE_40e83067b9cb"}'
+
+and should return the original message:
+{"message":"oferta de trabajo para Dago Borda con email dborda@gmail.com y teléfono 3152319157"}
+
+
+
+Fase 2:
+
+Promt 1:
+thanks, now i create a bd in mongobd i wanna connect by moongose, the propose is save the pair of PII (Personally identifiable information) and token,
+Promt 2:
+Error: The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.
+
+Promt 3:
+
+curl -X POST http://localhost:3001/deanonymize \
+-H "Content-Type: application/json" \
+-d '{"anonymizedMessage":"oferta de trabajo para NAME_4333f9a78c71 con email EMAIL_3c6f6bcd7f2f y telefono PHONE_bab908719bc8"}'
+
+Fase 3:
+
+Promt 1:
+
+ty, now i need a class to connect with my openAI api, and in this class you have to do a "text completion"
+
+Promt 2:
+
+give me a curl with data to anonymizer, please
+
+curl -X POST http://localhost:3001/anonymize \
+-H "Content-Type: application/json" \
+-d '{"message":"Mi nombre es Juan Pérez, mi email es juan.perez@gmail.com y mi teléfono es 3001234567, quiero que me des una oferta de trabajo"}'
+
+
+curl -X POST http://localhost:3001/complete \
+-H "Content-Type: application/json" \
+-d '{
+    "prompt": "NAME_f42fef82d958:\n\nNos complace presentarte una emocionante oportunidad laboral en nuestra empresa. Estamos en busqueda de un Arquitecto de Soluciones con experiencia en tecnologia, inteligencia artificial y seguridad, que pueda aportar su conocimiento en entornos de NAME_72d36c5aa7d7, Azure y arquitecturas en la nube.\n\nLa posicion implica el diseño e implementacion de arquitecturas escalables, la integracion de soluciones en NAME_72d36c5aa7d7 y Power BI, asi como la optimizacion de recursos en Azure para mejorar la eficiencia operativa. Ademas, participaras en proyectos de inteligencia artificial y analisis de datos.\n\nBuscamos un profesional con experiencia en:\n- Arquitectura de soluciones\n- Seguridad informatica\n- Gestion de datos\n- Power BI\n- Dataverse\n- Kubernetes\n- Kafka\n- Istio\n- Modelado de datos\n- Automatizacion de procesos\n\nSi estas interesado en esta oportunidad, no dudes en contactarnos para agendar una reunion y discutir mas detalles.\n\nPuedes escribirnos a EMAIL_0de055d6d323 o llamarnos al +57 PHONE_09b30d99b0ce.\n\nEsperamos contar con tu talento en nuestro equipo.\n\nSaludos cordiales,\nNAME_c5b27cbe60f1\nEMAIL_4a4d093773d7",
+    "options": {
+        "temperature": 0.8,
+        "max_tokens": 200
+    }
+}'
+
+
+
+
+curl -X POST http://localhost:3001/deanonymize \
+-H "Content-Type: application/json" \
+-d '{"anonymizedMessage":"oferta de trabajo para NAME_3f09079846e8 con email EMAIL_ce30bf90e103 y telefono PHONE_ed58601d16e0"}'
+
+
+
+
+
+Promt 3:
+
+put this text in the curl to anonymize Estimado Juan Perez, Nos complace presentarte una emocionante oportunidad laboral en nuestra empresa. Estamos en busqueda de un Arquitecto de Soluciones con experiencia en tecnologia, inteligencia artificial y seguridad, que pueda aportar su conocimiento en entornos de Microsoft Power Platform, Azure y arquitecturas en la nube. La posicion implica el diseño e implementacion de arquitecturas escalables, la integracion de soluciones en Microsoft Power Platform y Power BI, asi como la optimizacion de recursos en Azure para mejorar la eficiencia operativa. Ademas, participaras en proyectos de inteligencia artificial y analisis de datos. Buscamos un profesional con experiencia en arquitectura de soluciones, seguridad informatica y gestion de datos, con conocimientos en Power BI, Dataverse, Kubernetes, Kafka e Istio, ademas de habilidades en modelado de datos y automatizacion de procesos. Si estas interesado en esta oportunidad, no dudes en contactarnos para agendar una reunion y discutir mas detalles. Puedes escribirnos a reclutamiento@empresa.com o llamarnos al +57 3109876543. Esperamos contar con tu talento en nuestro equipo. Saludos cordiales, pepito rosas, solucion ltda, peipito@solucion.com
+
+
+Promt 4:
+look the documentation, and review the curl to openai
+@https://platform.openai.com/docs/api-reference/making-requests 
+
+
+
+curl -X POST http://localhost:3001/complete \
+-H "Content-Type: application/json" \
+-d '{
+    "prompt": "NAME_f42fef82d958:\n\nNos complace presentarte una emocionante oportunidad laboral en nuestra empresa. Estamos en busqueda de un Arquitecto de Soluciones con experiencia en tecnologia, inteligencia artificial y seguridad, que pueda aportar su conocimiento en entornos de NAME_72d36c5aa7d7, Azure y arquitecturas en la nube.\n\nLa posicion implica el diseño e implementacion de arquitecturas escalables, la integracion de soluciones en NAME_72d36c5aa7d7 y Power BI, asi como la optimizacion de recursos en Azure para mejorar la eficiencia operativa. Ademas, participaras en proyectos de inteligencia artificial y analisis de datos.\n\nBuscamos un profesional con experiencia en:\n- Arquitectura de soluciones\n- Seguridad informatica\n- Gestion de datos\n- Power BI\n- Dataverse\n- Kubernetes\n- Kafka\n- Istio\n- Modelado de datos\n- Automatizacion de procesos\n\nSi estas interesado en esta oportunidad, no dudes en contactarnos para agendar una reunion y discutir mas detalles.\n\nPuedes escribirnos a EMAIL_0de055d6d323 o llamarnos al +57 PHONE_09b30d99b0ce.\n\nEsperamos contar con tu talento en nuestro equipo.\n\nSaludos cordiales,\nNAME_c5b27cbe60f1\nEMAIL_4a4d093773d7",
+    "options": {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+            {
+                "role": "user",
+                "content": "NAME_f42fef82d958:\n\nNos complace presentarte una emocionante oportunidad laboral en nuestra empresa. Estamos en busqueda de un Arquitecto de Soluciones con experiencia en tecnologia, inteligencia artificial y seguridad, que pueda aportar su conocimiento en entornos de NAME_72d36c5aa7d7, Azure y arquitecturas en la nube.\n\nLa posicion implica el diseño e implementacion de arquitecturas escalables, la integracion de soluciones en NAME_72d36c5aa7d7 y Power BI, asi como la optimizacion de recursos en Azure para mejorar la eficiencia operativa. Ademas, participaras en proyectos de inteligencia artificial y analisis de datos.\n\nBuscamos un profesional con experiencia en:\n- Arquitectura de soluciones\n- Seguridad informatica\n- Gestion de datos\n- Power BI\n- Dataverse\n- Kubernetes\n- Kafka\n- Istio\n- Modelado de datos\n- Automatizacion de procesos\n\nSi estas interesado en esta oportunidad, no dudes en contactarnos para agendar una reunion y discutir mas detalles.\n\nPuedes escribirnos a EMAIL_0de055d6d323 o llamarnos al +57 PHONE_09b30d99b0ce.\n\nEsperamos contar con tu talento en nuestro equipo.\n\nSaludos cordiales,\nNAME_c5b27cbe60f1\nEMAIL_4a4d093773d7"
+            }
+        ],
+        "temperature": 0.8,
+        "max_tokens": 200
+    }
+}'
+
+curl https://api.openai.com/v1/chat/completions \                                           
+  -H "Authorization: Bearer $OPENAI_API_KEY" \  -H "OpenAI-Organization: org-9c1T2efhwEagAtsDDg3vy5Zx" \   -H "Content-Type: application/json" \                     -d '{                                                                                                                   "model": "gpt-3.5-turbo",    "messages": [                                                                                                                  
+      {                
+        "role": "system",        "content": "You are a professional HR assistant. Please respond to job applications in a professional manner."      },      {        "role": "user",        "content": "NAME_f42fef82d958:\n\nNos complace presentarte una emocionante oportunidad laboral en nuestra empresa. Estamos en busqueda de un Arquitecto de Soluciones con experiencia en tecnologia, inteligencia artificial y seguridad, que pueda aportar su conocimiento en entornos de NAME_72d36c5aa7d7, Azure y arquitecturas en la nube.\n\nLa posicion implica el diseño e implementacion de arquitecturas escalables, la integracion de soluciones en NAME_72d36c5aa7d7 y Power BI, asi como la optimizacion de recursos en Azure para mejorar la eficiencia operativa. Ademas, participaras en proyectos de inteligencia artificial y analisis de datos.\n\nBuscamos un profesional con experiencia en:\n- Arquitectura de soluciones\n- Seguridad informatica\n- Gestion de datos\n- Power BI\n- Dataverse\n- Kubernetes\n- Kafka\n- Istio\n- Modelado de datos\n- Automatizacion de procesos\n\nSi estas interesado en esta oportunidad, no dudes en contactarnos para agendar una reunion y discutir mas detalles.\n\nPuedes escribirnos a EMAIL_0de055d6d323 o llamarnos al +57 PHONE_09b30d99b0ce.\n\nEsperamos contar con tu talento en nuestro equipo.\n\nSaludos cordiales,\nNAME_c5b27cbe60f1\nEMAIL_4a4d093773d7"                     <....
+
+
+Promt 5:
+wich is the error?
+
+Promt 6:
+i have 5 usd in credit
+
+Promt 7:
+look the curl documentation
+
+curl https://api.openai.com/v1/models \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "OpenAI-Organization: org-9c1T2efhwEagAtsDDg3vy5Zx" \
+  -H "OpenAI-Project: $PROJECT_ID"
+
+
+why is diferrent
+
+Promt 8:
+with this curl the message that ill sent is the next NAME_f42fef82d958:\n\nNos complace presentarte una emocionante oportunidad laboral en nuestra empresa. Estamos en busqueda de un Arquitecto de Soluciones con experiencia en tecnologia, inteligencia artificial y seguridad, que pueda aportar su conocimiento en entornos de NAME_72d36c5aa7d7, Azure y arquitecturas en la nube.\n\nLa posicion implica el diseño e implementacion de arquitecturas escalables, la integracion de soluciones en NAME_72d36c5aa7d7 y Power BI, asi como la optimizacion de recursos en Azure para mejorar la eficiencia operativa. Ademas, participaras en proyectos de inteligencia artificial y analisis de datos.\n\nBuscamos un profesional con experiencia en:\n- Arquitectura de soluciones\n- Seguridad informatica\n- Gestion de datos\n- Power BI\n- Dataverse\n- Kubernetes\n- Kafka\n- Istio\n- Modelado de datos\n- Automatizacion de procesos\n\nSi estas interesado en esta oportunidad, no dudes en contactarnos para agendar una reunion y discutir mas detalles.\n\nPuedes escribirnos a EMAIL_0de055d6d323 o llamarnos al +57 PHONE_09b30d99b0ce.\n\nEsperamos contar con tu talento en nuestro equipo.\n\nSaludos cordiales,\nNAME_c5b27cbe60f1\nEMAIL_4a4d093773d7
+
+put this in the message curl
+
+Promt 9:
+@Readme.md this file is updated ? or needs some change?

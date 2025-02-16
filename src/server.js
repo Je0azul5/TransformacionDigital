@@ -1,5 +1,16 @@
-require('dotenv').config();
-console.log('MongoDB URI:', process.env.MONGODB_URI);
+const result = require('dotenv').config();
+console.log('Dotenv configuration result:', result);
+
+if (result.error) {
+    console.error('Error loading .env file:', result.error);
+}
+
+console.log('Current environment variables:', {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY ? 'Present' : 'Missing',
+    OPENAI_ORGANIZATION: process.env.OPENAI_ORGANIZATION ? 'Present' : 'Missing',
+    NODE_ENV: process.env.NODE_ENV
+});
+
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
@@ -86,6 +97,21 @@ app.post('/complete', async (req, res) => {
             details: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
+});
+
+// Endpoint de prueba para verificar credenciales
+app.get('/api-test', (req, res) => {
+    console.log('Environment variables:', {
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY ? 'Present' : 'Missing',
+        OPENAI_ORGANIZATION: process.env.OPENAI_ORGANIZATION ? 'Present' : 'Missing',
+        NODE_ENV: process.env.NODE_ENV
+    });
+
+    res.json({
+        apiKey: process.env.OPENAI_API_KEY ? 'Configurada' : 'No configurada',
+        organization: process.env.OPENAI_ORGANIZATION ? 'Configurada' : 'No configurada',
+        environment: process.env.NODE_ENV || 'development'
+    });
 });
 
 app.listen(port, () => {

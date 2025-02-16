@@ -6,8 +6,13 @@ class OpenAIService {
             throw new Error('OPENAI_API_KEY is required in environment variables');
         }
         
+        if (!process.env.OPENAI_ORGANIZATION) {
+            throw new Error('OPENAI_ORGANIZATION is required in environment variables');
+        }
+        
         this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY
+            apiKey: process.env.OPENAI_API_KEY,
+            organization: process.env.OPENAI_ORGANIZATION
         });
     }
 
@@ -29,44 +34,29 @@ class OpenAIService {
                         content: prompt
                     }
                 ],
-                temperature: options.temperature || 0.7,
-                max_tokens: options.max_tokens || 150
+                temperature: 0.7,
+                max_tokens: 150
             };
 
-            // Merge with provided options
-            const finalOptions = {
-                ...defaultOptions,
-                ...options,
-                messages: options.messages || defaultOptions.messages
-            };
-
-            console.log('Using options:', finalOptions);
-
-            const completion = await this.openai.chat.completions.create(finalOptions);
-
+            console.log('API Key:', process.env.OPENAI_API_KEY.substring(0, 5) + '...');
+            console.log('Organization:', process.env.OPENAI_ORGANIZATION);
+            
+            const completion = await this.openai.chat.completions.create(defaultOptions);
+            
             if (!completion.choices || completion.choices.length === 0) {
                 throw new Error('No completion choices returned from OpenAI');
             }
 
             return completion.choices[0].message.content;
         } catch (error) {
-            // Detailed error logging
-            console.error('OpenAI API Error Details:', {
+            console.error('OpenAI API Error:', {
                 message: error.message,
-                type: error.type,
                 status: error.status,
-                stack: error.stack
+                headers: error.response?.headers,
+                data: error.response?.data
             });
 
-            if (error.response) {
-                console.error('OpenAI API Response Error:', {
-                    status: error.response.status,
-                    data: error.response.data
-                });
-            }
-
-            // Throw a more specific error
-            throw new Error(`OpenAI API Error: ${error.message}`);
+            throw error;
         }
     }
 }
